@@ -1,0 +1,302 @@
+@import "tailwindcss";
+
+/* ── Design tokens (arounda-inspired dark system) ── */
+:root {
+  /* Arounda dark palette */
+  --black:       #0B0B0B;
+  --black-card:  #1C1C1C;
+  --black-card2: #202020;
+  --black-hover: #282828;
+  --white:       #FFFFFF;
+  --off-white:   #F5F5F7;
+  --text-dark:   #141515;
+  --text-muted:  rgba(255,255,255,0.5);
+  --text-subtle: rgba(255,255,255,0.3);
+  --stroke:      rgba(255,255,255,0.1);
+  --stroke-light: rgba(0,0,0,0.08);
+
+  /* Xakili accent (teal = arounda's lime role) */
+  --teal:        #0E8A8A;
+  --teal-deep:   #0A6E6E;
+  --teal-bright: #14B8B8;
+
+  /* Product accents */
+  --lab-color:   #C2410C;
+  --med-color:   #6366F1;
+  --emerald:     #059669;
+
+  /* Legacy compat (keeps existing helpers working) */
+  --ink:         #0B0B0B;
+  --slate:       #1C1C1C;
+  --stone:       #333;
+  --paper:       #F5F5F7;
+  --paper-deep:  #EFEFEF;
+  --cream:       #E8E8E4;
+  --mist:        rgba(255,255,255,0.1);
+}
+
+@theme inline {
+  --color-black:      var(--black);
+  --color-ink:        var(--black);
+  --color-white:      var(--white);
+  --color-off-white:  var(--off-white);
+  --color-text-dark:  var(--text-dark);
+  --color-teal:       var(--teal);
+  --color-teal-deep:  var(--teal-deep);
+  --color-teal-bright: var(--teal-bright);
+  --color-lab:        var(--lab-color);
+  --color-med:        var(--med-color);
+  --color-emerald:    var(--emerald);
+  --color-stone:      var(--stone);
+  --color-paper:      var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-cream:      var(--cream);
+  --color-mist:       var(--mist);
+  --font-inter:       var(--font-inter-var);
+  --font-fraunces:    var(--font-fraunces-var);
+
+  --animate-marquee:  marquee 40s linear infinite;
+  --animate-fade-up:  fade-up 0.7s ease forwards;
+  --animate-fade-in:  fade-in 0.5s ease forwards;
+  --animate-blob:     blob 9s ease-in-out infinite;
+}
+
+/* ── Keyframes ── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes blob {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  33%       { transform: translate(40px,-30px) scale(1.07); }
+  66%       { transform: translate(-30px,30px) scale(0.93); }
+}
+@keyframes shimmer {
+  from { background-position: 200% center; }
+  to   { background-position: -200% center; }
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Base ── */
+html { scroll-behavior: smooth; font-size: 10px; }
+
+body {
+  background-color: var(--black);
+  color: var(--white);
+  font-family: var(--font-inter-var, 'DM Sans', system-ui, sans-serif);
+  font-size: 1.6rem;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Font helpers ── */
+.font-fraunces { font-family: var(--font-fraunces-var, Georgia, serif); }
+
+/* ── Typography scale (arounda rem system, base 10px) ── */
+.text-h1       { font-size: clamp(4.8rem, 8.5vw, 13rem); font-weight: 500; line-height: 1.05; letter-spacing: -0.02em; }
+.text-h2       { font-size: clamp(3.2rem, 4.5vw, 5.6rem); font-weight: 500; line-height: 1.1; }
+.text-h3       { font-size: clamp(2.4rem, 3.5vw, 4rem); font-weight: 500; line-height: 1.15; }
+.text-body-xl  { font-size: clamp(1.8rem, 2.2vw, 2.6rem); font-weight: 400; line-height: 1.5; }
+.text-body-m   { font-size: 1.8rem; font-weight: 400; line-height: 1.6; }
+.text-body-s   { font-size: 1.4rem; font-weight: 400; line-height: 1.5; }
+
+/* ── Section label (arounda uppercase tag) ── */
+.section-tag {
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
+
+/* ── Pill / tag component ── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 1.6rem;
+  border-radius: 1000px;
+  border: 1px solid rgba(255,255,255,0.15);
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.75);
+  white-space: nowrap;
+}
+
+/* ── Inline italic hero pill (arounda style) ── */
+.hero-word-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1em 0.35em;
+  border-radius: 0.35em;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+  font-style: italic;
+  font-family: var(--font-fraunces-var, Georgia, serif);
+}
+
+/* ── CTA Button — teal pill (arounda lime role) ── */
+.btn-teal {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.4rem 2.8rem;
+  border-radius: 1000px;
+  background: var(--teal);
+  color: var(--white);
+  font-size: 1.6rem;
+  font-weight: 500;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.btn-teal:hover { background: var(--teal-deep); transform: translateY(-1px); }
+
+/* ── CTA Button — white pill (nav contact) ── */
+.btn-white {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 2.4rem;
+  border-radius: 1000px;
+  background: var(--white);
+  color: var(--text-dark);
+  font-size: 1.5rem;
+  font-weight: 500;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+.btn-white:hover { opacity: 0.88; }
+
+/* ── Card dark (glassmorphism) ── */
+.card-dark {
+  background: var(--black-card);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 2.4rem;
+}
+
+/* ── Arrow badge (arounda arrow circle) ── */
+.arrow-badge {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+/* ── Section dividers ── */
+.section-dark  { background: var(--black); }
+.section-light { background: var(--off-white); color: var(--text-dark); }
+.section-card  { background: var(--black-card); }
+
+/* ── Dot grid (for dark bg) ── */
+.dot-grid-dark {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ── Radial glow (arounda hero purple blob) ── */
+.hero-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+/* ── Service list item (arounda services section) ── */
+.service-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--stroke-light);
+  transition: opacity 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+.service-item:hover { opacity: 0.65; }
+.service-item:last-child { border-bottom: none; }
+
+/* ── Nav link hover ── */
+.nav-link {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 1000px;
+  transition: color 0.2s;
+}
+.nav-link:hover { color: #fff; }
+
+/* ── Footer link hover ── */
+.footer-link {
+  font-size: 1.5rem;
+  color: rgba(255,255,255,0.45);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-link:hover { color: #fff; }
+
+/* ── Case study row hover ── */
+.case-row {
+  display: grid;
+  grid-template-columns: 22rem 1fr auto;
+  gap: 4rem;
+  padding: 4rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  text-decoration: none;
+  align-items: center;
+  transition: opacity 0.2s;
+}
+.case-row:hover { opacity: 0.65; }
+
+/* ── Nav external link hover ── */
+.nav-ext-link {
+  font-size: 1.5rem;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  padding: 0.8rem 1.2rem;
+  transition: color 0.2s;
+}
+.nav-ext-link:hover { color: #fff; }
+
+/* ── Stat card (white on dark) ── */
+.stat-card {
+  background: var(--white);
+  color: var(--text-dark);
+  border-radius: 2rem;
+  padding: 3.2rem;
+}
+
+/* ── Gradient text teal ── */
+.gradient-text-teal {
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-bright) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Case block hover ── */
+.case-block { opacity: 1; }
+.case-block:hover { opacity: 0.85; }
+
+/* ── Strikethrough ── */
+.text-strikethrough-red {
+  text-decoration: line-through;
+  text-decoration-color: #E11D48;
+  text-decoration-thickness: 3px;
+}
