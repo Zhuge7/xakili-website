@@ -1,0 +1,56 @@
+name: Deploy to Infomaniak
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npx next build
+        env:
+          NODE_ENV: production
+
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: Deploy .next/ to Infomaniak
+        env:
+          SSHPASS: ${{ secrets.IK_SSH_PASSWORD }}
+        run: |
+          sshpass -e rsync -avz --delete \
+            --exclude="cache" \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            .next/ ${{ secrets.IK_SSH_USER }}@185.125.27.89:/srv/customer/sites/xakili.com/.next/
+
+      - name: Sync server files
+        env:
+          SSHPASS: ${{ secrets.IK_SSH_PASSWORD }}
+        run: |
+          sshpass -e rsync -avz \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            server.js next.config.ts package.json \
+            ${{ secrets.IK_SSH_USER }}@185.125.27.89:/srv/customer/sites/xakili.com/
+
+      - name: Restart Node.js process
+        run: |
+          sleep 3
+          curl -sf -X POST \
+            "https://xakili.com/api/deploy?token=${{ secrets.DEPLOY_SECRET }}" \
+            && echo "Restart OK" || echo "Restart failed"
